@@ -1,0 +1,19 @@
+// Hide all product quote boxes
+$('.product-quote-box').addClass('hidden');
+
+// Show and update only the filtered product quotes
+<% @product_quotes.each do |product_quote| %>
+  var $box = $('.product-quote-box').filter(function() {
+    return $(this).find('.product-quote-box-product-name').text() === '<%= j product_quote.product_name %>';
+  });
+  
+  $box.removeClass('hidden');
+  $box.find('.product-quote-box-buy-premium').text('<%= j number_to_currency(product_quote.premium) %>');
+<% end %>
+
+// If no products match the selected coverages, show a message
+if ($('.product-quote-box:not(.hidden)').length === 0) {
+  $('.product-quote-box').first().removeClass('hidden')
+    .find('.product-quote-box-product').html('<div class="alert alert-info">No products match the selected coverages.</div>')
+    .siblings().hide();
+} 
