@@ -12,10 +12,12 @@ class QuotesController < ApplicationController
     @selected_coverages = Coverage.where(id: params[:coverage_ids])
 
     # Get products that match all selected coverages
-    @product_quotes = filter_products_by_coverages(@quote.product_quotes, @selected_coverages)
+    @product_quotes = ProductQuote.filter_by_coverages(@quote.product_quotes, @selected_coverages)
 
     # Update premiums based on selected coverages
-    update_product_premiums(@product_quotes, @selected_coverages)
+    @product_quotes.each do |product_quote|
+      product_quote.update_premium_based_on_coverages(@selected_coverages)
+    end
 
     respond_to do |format|
       format.js
