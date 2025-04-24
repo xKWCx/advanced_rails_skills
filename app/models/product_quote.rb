@@ -1,15 +1,4 @@
 class ProductQuote < ApplicationRecord
-  # Coverage types
-  BAGGAGE_DELAY = "Baggage Delay"
-  EMERGENCY_MEDICAL = "Emergency Medical"
-  TRIP_CANCELLATION = "Trip Cancellation"
-
-  # Premium adjustments
-  BAGGAGE_DELAY_MULTIPLIER = 2
-  EMERGENCY_MEDICAL_ADDITION = 50
-  TRIP_CANCELLATION_WITH_EM = 75
-  TRIP_CANCELLATION_WITHOUT_EM = 100
-
   belongs_to :quote
   has_and_belongs_to_many :coverages
 
@@ -39,17 +28,17 @@ class ProductQuote < ApplicationRecord
 
     # Pre-calculate coverage names to avoid repeated lookups
     coverage_names = selected_coverages.map(&:name)
-    has_emergency_medical = coverage_names.include?(InsuranceCoverage::EMERGENCY_MEDICAL)
+    has_emergency_medical = coverage_names.include?("Emergency Medical")
 
     selected_coverages.each do |coverage|
-      rule = InsurancePremium::RULES[coverage.name]
-      next unless rule
-
-      premium = if coverage.name == InsuranceCoverage::TRIP_CANCELLATION
-                  rule.call(premium, has_emergency_medical)
-                else
-                  rule.call(premium)
-                end
+      case coverage.name
+      when "Baggage Delay"
+        premium *= 2
+      when "Emergency Medical"
+        premium += 50
+      when "Trip Cancellation"
+        premium += has_emergency_medical ? 75 : 100
+      end
     end
 
     premium
