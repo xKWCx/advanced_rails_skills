@@ -1,0 +1,63 @@
+<div class="row">
+  <div class="panel panel-default my-quote-panel">
+    <div class="panel-heading my-quote-panel-heading">My Quote</div>
+    <table class="table">
+      <tr>
+        <th>Departure</th>
+        <th>Return</th>
+        <th>Destination</th>
+        <th>Trip Cost</th>
+        <th>Travelers</th>
+      </tr>
+      <tr>
+        <td><%= @quote.departure_date.to_fs(:long) %></td>
+        <td><%= @quote.return_date.to_fs(:long) %></td>
+        <td><%= @quote.destination_country %></td>
+        <td><%= number_to_currency @quote.trip_cost %></td>
+        <td><%= @quote.travelers_count %></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<% @quote.product_quotes.each_with_index do |product_quote, i| %>
+  <div class="row">
+    <div class="product-quote-box">
+      <div class="product-quote-box-index"><%= i + 1 %></div>
+      <div class="product-quote-box-separator"></div>
+      <div class="product-quote-box-product">
+        <div class="product-quote-box-product-name"><%= product_quote.product_name %></div>
+        <div><%= product_quote.provider_name %></div>
+        <div class="product-quote-box-coverages">
+          Coverages:
+          <ul>
+            <% product_quote.coverages.each do |coverage| %>
+              <li><%= link_to coverage.name, coverage, class: "js-coverage-info" %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+      <div class="product-quote-box-buy">
+        <div class="product-quote-box-buy-premium"><%= number_to_currency product_quote.premium %></div>
+        <button type="button" class="btn btn-primary">Buy Now</button>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="modal fade js-coverage-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="js-coverage-modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body js-coverage-modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<div>
+  <table class="table">
+    <tr>
+      <th>#</th>
+      <th>Departure Date</th>
+      <th>Return Date</th>
+      <th>Destination Country</th>
+      <th>Trip Cost</th>
+      <th>Travelers Count</th>
+    </tr>
+    <% @quotes.each do |quote| %>
+      <tr>
+        <td><%= link_to quote.id, quote %></td>
+        <td><%= quote.departure_date %></td>
+        <td><%= quote.return_date %></td>
+        <td><%= quote.destination_country %></td>
+        <td><%= number_to_currency quote.trip_cost %></td>
+        <td><%= quote.travelers_count %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
