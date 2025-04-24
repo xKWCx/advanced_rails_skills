@@ -1,22 +1,44 @@
 <div class="row">
-  <div class="panel panel-default my-quote-panel">
-    <div class="panel-heading my-quote-panel-heading">My Quote</div>
-    <table class="table">
-      <tr>
-        <th>Departure</th>
-        <th>Return</th>
-        <th>Destination</th>
-        <th>Trip Cost</th>
-        <th>Travelers</th>
-      </tr>
-      <tr>
-        <td><%= @quote.departure_date.to_fs(:long) %></td>
-        <td><%= @quote.return_date.to_fs(:long) %></td>
-        <td><%= @quote.destination_country %></td>
-        <td><%= number_to_currency @quote.trip_cost %></td>
-        <td><%= @quote.travelers_count %></td>
-      </tr>
-    </table>
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">Coverage Options</div>
+      <div class="panel-body">
+        <div class="coverage-options">
+          <% Coverage.all.each do |coverage| %>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" 
+                       class="js-coverage-option" 
+                       data-coverage-id="<%= coverage.id %>"
+                       data-coverage-name="<%= coverage.name %>">
+                <%= coverage.name %>
+              </label>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="panel panel-default my-quote-panel">
+      <div class="panel-heading my-quote-panel-heading">My Quote</div>
+      <table class="table">
+        <tr>
+          <th>Departure</th>
+          <th>Return</th>
+          <th>Destination</th>
+          <th>Trip Cost</th>
+          <th>Travelers</th>
+        </tr>
+        <tr>
+          <td><%= @quote.departure_date.to_fs(:long) %></td>
+          <td><%= @quote.return_date.to_fs(:long) %></td>
+          <td><%= @quote.destination_country %></td>
+          <td><%= number_to_currency @quote.trip_cost %></td>
+          <td><%= @quote.travelers_count %></td>
+        </tr>
+      </table>
+    </div>
   </div>
 </div>
 
