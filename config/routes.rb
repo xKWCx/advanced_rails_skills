@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
+  resources :quotes do
+    member do
+      get :update_products
+    end
+  end
   resources :coverages, only: [:show]
-  resources :quotes, only: [:index, :show]
 
   root to: "quotes#index"
 end
