@@ -11,15 +11,11 @@ class QuotesController < ApplicationController
     @quote = Quote.find(params[:id])
     @selected_coverages = Coverage.where(id: params[:coverage_ids])
 
-    # Filter products that have all selected coverages
-    @product_quotes = @quote.product_quotes.select do |pq|
-      @selected_coverages.all? { |coverage| pq.coverages.include?(coverage) }
-    end
+    # Get products that match all selected coverages
+    @product_quotes = filter_products_by_coverages(@quote.product_quotes, @selected_coverages)
 
-    # Recalculate premiums based on selected coverages
-    @product_quotes.each do |pq|
-      pq.premium = calculate_premium(pq, @selected_coverages)
-    end
+    # Update premiums based on selected coverages
+    update_product_premiums(@product_quotes, @selected_coverages)
 
     respond_to do |format|
       format.js
@@ -27,6 +23,22 @@ class QuotesController < ApplicationController
   end
 
   private
+
+  # Returns products that have all the selected coverages
+  def filter_products_by_coverages(products, selected_coverages)
+    return products if selected_coverages.empty?
+
+    products.select do |product|
+      selected_coverages.all? { |coverage| product.coverages.include?(coverage) }
+    end
+  end
+
+  # Updates the premium for each product based on selected coverages
+  def update_product_premiums(products, selected_coverages)
+    products.each do |product|
+      product.premium = calculate_premium(product, selected_coverages)
+    end
+  end
 
   def calculate_premium(product_quote, selected_coverages)
     premium = product_quote.premium
